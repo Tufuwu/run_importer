@@ -12,17 +12,94 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: "${{ matrix.python }}"
-    - run: pip install tox-travis
-    - run: tox
-#     # This item has no matching transformer
-#     - email: false
-    strategy:
-      matrix:
-        python:
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.9'
+        python-version: 3.8
+    - run: make
+    - run: pip install poetry
+    - run: poetry install
+    - run: make tests
+    - run: bash <(curl -s https://codecov.io/bash)
+      if: "${{ success() }}"
+    - uses: distributhor/workflow-webhook@v3.0.5
+      env:
+        webhook_url: https://webhooks.gitter.im/e/55cf16b611593edcb09d
+        webhook_secret: "${{ secrets.WEBHOOK_SECRET }}"
+  test_2:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+    - run: make
+    - run: pip install poetry
+    - run: poetry install
+    - run: make tests
+    - run: bash <(curl -s https://codecov.io/bash)
+      if: "${{ success() }}"
+    - uses: distributhor/workflow-webhook@v3.0.5
+      env:
+        webhook_url: https://webhooks.gitter.im/e/55cf16b611593edcb09d
+        webhook_secret: "${{ secrets.WEBHOOK_SECRET }}"
+  test_3:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+    - run: make
+    - run: pip install poetry
+    - run: poetry install
+    - run: make tests
+    - run: bash <(curl -s https://codecov.io/bash)
+      if: "${{ success() }}"
+    - uses: distributhor/workflow-webhook@v3.0.5
+      env:
+        webhook_url: https://webhooks.gitter.im/e/55cf16b611593edcb09d
+        webhook_secret: "${{ secrets.WEBHOOK_SECRET }}"
+  test_4:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.9
+    - run: make
+    - run: pip install poetry
+    - run: poetry install
+    - run: make tests
+    - run: bash <(curl -s https://codecov.io/bash)
+      if: "${{ success() }}"
+    - uses: distributhor/workflow-webhook@v3.0.5
+      env:
+        webhook_url: https://webhooks.gitter.im/e/55cf16b611593edcb09d
+        webhook_secret: "${{ secrets.WEBHOOK_SECRET }}"
