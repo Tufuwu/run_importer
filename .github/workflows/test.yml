@@ -15,27 +15,30 @@ jobs:
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: rm -f ${{ github.workspace }}/.cache/pip/log/debug.log
-    - name: Set up cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "${{ github.workspace }}/.cache/pip"
-        key: "${{ runner.os }}-path"
 #     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install tox-travis
-    - run: pip install coveralls
-    - run: pip install -r requirements/testing.txt
-    - run: flake8
-    - run: tox
-    - run: coveralls
-#     # This item has no matching transformer
-#     - email:
-#         on_success: change
-#         on_failure: always
+    - run: pip install -U django==$DJANGO_VERSION
+    - run: if [ "$TRAVIS_PYTHON_VERSION" = "3.8" ]; then pip install black; fi
+    - run: python manage.py test
+    - run: if [ "$TRAVIS_PYTHON_VERSION" = "3.8" ]; then black --check zen_queries; fi
     strategy:
       matrix:
+        DJANGO_VERSION:
+        - '1.8'
+        - '1.11'
+        - '2.0'
+        - '2.1'
+        - '2.2'
         python:
         - '3.8'
         - '3.8'
         - '3.8'
-        - '3.9'
+        - '3.8'
+        exclude:
+        - DJANGO_VERSION: '2.0'
+          python: '3.8'
+        - DJANGO_VERSION: '2.1'
+          python: '3.8'
+        - DJANGO_VERSION: '2.2'
+          python: '3.8'
+    env:
+      DJANGO_VERSION: "${{ matrix.DJANGO_VERSION }}"
