@@ -22,7 +22,6 @@ jobs:
         path: "~/.cache/pip"
         key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
         restore-keys: "${{ runner.os }}-pip-"
-    - run: apt-get -y install graphviz
 #     # 'version' was not transformed because there is no suitable equivalent in GitHub Actions
     - run: pip install .[test] codecov
     - run: "./run-tests.py"
@@ -31,7 +30,7 @@ jobs:
     strategy:
       matrix:
         python:
+        - '3.8'
+        - '3.8'
+        - '3.8'
         - '3.9'
-        - '3.8'
-        - '3.8'
-        - '3.8'
