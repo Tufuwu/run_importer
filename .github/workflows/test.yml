@@ -20,8 +20,8 @@ jobs:
         restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.9
-    - run: pip install -r requirements.txt
-    - run: make check PIP=pip BUILDBOT=buildbot
-#     # This item has no matching transformer
-#     - email: false
+        python-version: 3.8
+    - run: python3 -m pip install -U -r dev-requirements.txt
+    - run: python3 -m coverage run --branch -m pytest tests/
+    - run: bash <(curl -s https://codecov.io/bash)
+      if: "${{ success() }}"
