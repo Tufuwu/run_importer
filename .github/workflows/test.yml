@@ -8,23 +8,51 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: make setup
-    - run: make
-    - run: make lint
-    - run: make docs
-    - run: make travis-test
+    - run: npm i -g elm
+    - run: pip install tox-travis
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
     strategy:
       matrix:
         python:
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.8'
+        - 3.8
+        - 3.8
+        - 3.8
+  test_2:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: cover
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.8'
+    - run: npm i -g elm
+    - run: pip install tox-travis
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_3:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: black
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.8'
+    - run: npm i -g elm
+    - run: pip install tox-travis
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
