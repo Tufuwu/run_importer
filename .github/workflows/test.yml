@@ -8,21 +8,20 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install tox
-    - run: TOXENV=$(tox --listenvs | grep "py${TRAVIS_PYTHON_VERSION/./}-" | tr '\n' ',')
-    - run: export TOXENV
-    - run: tox
+    - run: pip install pycryptodome
+    - run: pip install requests
+    - run: python test.py
     strategy:
       matrix:
         python:
+        - '3.8'
         - '3.8'
         - '3.8'
         - '3.8'
