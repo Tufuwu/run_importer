@@ -8,96 +8,26 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: '3.8'
-    - run: pip install .[test]
-    - run: echo hello world
+        python-version: "${{ matrix.python }}"
+    - run: pip install numpy svgwrite scipy
+    - run: python -m unittest discover test
 #     # This item has no matching transformer
 #     - pypi:
 #         provider: pypi
-#         distributions: sdist
-#         user: mara-pypi-upload-account
+#         username: __token__
 #         password:
-#           secure: 0TQCqyHghdxbOQgpBRlJJzReA/Ksys/YB01T8B7Kxn8rNHwxjcY/PBv1/IrlfSz7Qn2QVrQwloYWQfiGlG7vzyPn7GdMElNEDQDWN4TvtjT93hpsWM5kn7MPI1eZTo2Ua0u+FDoMcMkTPB/qYJWttCQGm+Cd3SwQFJUW4lgXRw1k5GPujDZjxgHrNg5tshV1Ss7hB52wxfaSeqJU4Xu/9AuKfC4xITuXn15w0EOV/hvrXFuYNl03LhOTPAfiyAL+QqlBOEZq9DOAYd5bYSFkjhfwyM14Kp7AUvq1ZOwLWe8o/6sG0F8SUIEte7CncsAXC3WV64nTrIDUvg82YaRu5cx9mtRtiKFGHQJQpVaTQD87EBZ+hgZG7j2vlgI74jRyG9V7gbxj3JBgDzsET4eiIPGX/RQM7THvUdCB2nSPGGAvkcf+DwLtm/n0JDBJhUEtDq5pCcP/IcM3ij/q3qSzO9CgbE/uoLVfh1DQwQKT944Ls0ArCgpUw9Pc3iidlx1/3xOy6N7MONwSXBSX6SilV098QfTkQ0AHRCxg86YUZ8ijnJnF+UguDM7C1NMRXA/ir+FFZUU7rSuQppHDZK8eBNL1a5G4t8W2PftL0tAonEJESB8SW6rLnLHRqY2UWw7PelwZ3kQvUJAg0V1mow3nsekloZWmpaGo5PJFzUXjSD4=
+#           secure: DaP6S0yj9KlXICtYCWkd54f+yulPYMqr01giOFs2xv5kvMHF1GV160XvYdeLDfwLwAsjKr7438vhgeik99T9iWVb9SYQQsOj8zx+uKcNvNxY/+cHxN9joVOMbhowiqELtKbyNSf1fzax8CGv5+L6k7HfiFV6Zxy4r/4a7JJnavqlsyFn2fixD5FmY+gXjMlnWAer3Q9/1GCWhoUEkON9TRVUcZkYvvBGG16A3m/5o9brCiilaNH5lMiHjOQfbEjxYRgIy6wLGOT9u7EwYAhbnzKhqiaR2jQ5ZxFn52CVoy3r8+T9zvVtToDcjdn9bI+CEFiU37FR1sdJhANFozsoVT3LZid97e7BuMa5+UfFZWZIU7SOcPkzOYxEGwrwqrBWfSeQ3/R76fCcVyy4mNh7YJ5q/89y+NbIpWl6LxVJIwkfix9SUv0z1w4jFzOk5anzrCAJKtJxVFZSUC70ERPaDRK3t9jrZZNS9LIh7wcWGHuGyD4h/8gZr9y3STmNImDq1KdJnldgnOefIS2OXwM5IRkxKvtGeWgn123mp/1XoKDGX8ZhoWp0W0y1A9nZtOkWFjTUjmmj8SeD2R98KBQACsTUqTg3jtZR5dh3VHIPvUc2GeMXQVTZJspi9nyDhJbTLluMk+694S1nRb6Qv0UgIcz651gnv4s8qa6lGXKxEEg=
 #         'on':
 #           tags: true
-#           branch: main
-#           repo: mara/mara-pipelines
-#           condition: "$UPLOAD == True"
-#       if: "${{ github.event_name == 'push' && $UPLOAD == True && ${{ github.ref }} }}"
-  test_2:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: pip install .[test]
-    - run: echo hello world
-#     # This item has no matching transformer
-#     - pypi:
-#         provider: pypi
-#         distributions: sdist
-#         user: mara-pypi-upload-account
-#         password:
-#           secure: 0TQCqyHghdxbOQgpBRlJJzReA/Ksys/YB01T8B7Kxn8rNHwxjcY/PBv1/IrlfSz7Qn2QVrQwloYWQfiGlG7vzyPn7GdMElNEDQDWN4TvtjT93hpsWM5kn7MPI1eZTo2Ua0u+FDoMcMkTPB/qYJWttCQGm+Cd3SwQFJUW4lgXRw1k5GPujDZjxgHrNg5tshV1Ss7hB52wxfaSeqJU4Xu/9AuKfC4xITuXn15w0EOV/hvrXFuYNl03LhOTPAfiyAL+QqlBOEZq9DOAYd5bYSFkjhfwyM14Kp7AUvq1ZOwLWe8o/6sG0F8SUIEte7CncsAXC3WV64nTrIDUvg82YaRu5cx9mtRtiKFGHQJQpVaTQD87EBZ+hgZG7j2vlgI74jRyG9V7gbxj3JBgDzsET4eiIPGX/RQM7THvUdCB2nSPGGAvkcf+DwLtm/n0JDBJhUEtDq5pCcP/IcM3ij/q3qSzO9CgbE/uoLVfh1DQwQKT944Ls0ArCgpUw9Pc3iidlx1/3xOy6N7MONwSXBSX6SilV098QfTkQ0AHRCxg86YUZ8ijnJnF+UguDM7C1NMRXA/ir+FFZUU7rSuQppHDZK8eBNL1a5G4t8W2PftL0tAonEJESB8SW6rLnLHRqY2UWw7PelwZ3kQvUJAg0V1mow3nsekloZWmpaGo5PJFzUXjSD4=
-#         'on':
-#           tags: true
-#           branch: main
-#           repo: mara/mara-pipelines
-#           condition: "$UPLOAD == True"
-#       if: "${{ github.event_name == 'push' && $UPLOAD == True && ${{ github.ref }} }}"
-  test_3:
-    runs-on: ubuntu-22.04
-    env:
-      UPLOAD: 'True'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: pip install .[test]
-    - run: echo hello world
-#     # This item has no matching transformer
-#     - pypi:
-#         provider: pypi
-#         distributions: sdist
-#         user: mara-pypi-upload-account
-#         password:
-#           secure: 0TQCqyHghdxbOQgpBRlJJzReA/Ksys/YB01T8B7Kxn8rNHwxjcY/PBv1/IrlfSz7Qn2QVrQwloYWQfiGlG7vzyPn7GdMElNEDQDWN4TvtjT93hpsWM5kn7MPI1eZTo2Ua0u+FDoMcMkTPB/qYJWttCQGm+Cd3SwQFJUW4lgXRw1k5GPujDZjxgHrNg5tshV1Ss7hB52wxfaSeqJU4Xu/9AuKfC4xITuXn15w0EOV/hvrXFuYNl03LhOTPAfiyAL+QqlBOEZq9DOAYd5bYSFkjhfwyM14Kp7AUvq1ZOwLWe8o/6sG0F8SUIEte7CncsAXC3WV64nTrIDUvg82YaRu5cx9mtRtiKFGHQJQpVaTQD87EBZ+hgZG7j2vlgI74jRyG9V7gbxj3JBgDzsET4eiIPGX/RQM7THvUdCB2nSPGGAvkcf+DwLtm/n0JDBJhUEtDq5pCcP/IcM3ij/q3qSzO9CgbE/uoLVfh1DQwQKT944Ls0ArCgpUw9Pc3iidlx1/3xOy6N7MONwSXBSX6SilV098QfTkQ0AHRCxg86YUZ8ijnJnF+UguDM7C1NMRXA/ir+FFZUU7rSuQppHDZK8eBNL1a5G4t8W2PftL0tAonEJESB8SW6rLnLHRqY2UWw7PelwZ3kQvUJAg0V1mow3nsekloZWmpaGo5PJFzUXjSD4=
-#         'on':
-#           tags: true
-#           branch: main
-#           repo: mara/mara-pipelines
-#           condition: "$UPLOAD == True"
-#       if: "${{ github.event_name == 'push' && $UPLOAD == True && ${{ github.ref }} }}"
-  test_4:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.9'
-    - run: pip install .[test]
-    - run: echo hello world
-#     # This item has no matching transformer
-#     - pypi:
-#         provider: pypi
-#         distributions: sdist
-#         user: mara-pypi-upload-account
-#         password:
-#           secure: 0TQCqyHghdxbOQgpBRlJJzReA/Ksys/YB01T8B7Kxn8rNHwxjcY/PBv1/IrlfSz7Qn2QVrQwloYWQfiGlG7vzyPn7GdMElNEDQDWN4TvtjT93hpsWM5kn7MPI1eZTo2Ua0u+FDoMcMkTPB/qYJWttCQGm+Cd3SwQFJUW4lgXRw1k5GPujDZjxgHrNg5tshV1Ss7hB52wxfaSeqJU4Xu/9AuKfC4xITuXn15w0EOV/hvrXFuYNl03LhOTPAfiyAL+QqlBOEZq9DOAYd5bYSFkjhfwyM14Kp7AUvq1ZOwLWe8o/6sG0F8SUIEte7CncsAXC3WV64nTrIDUvg82YaRu5cx9mtRtiKFGHQJQpVaTQD87EBZ+hgZG7j2vlgI74jRyG9V7gbxj3JBgDzsET4eiIPGX/RQM7THvUdCB2nSPGGAvkcf+DwLtm/n0JDBJhUEtDq5pCcP/IcM3ij/q3qSzO9CgbE/uoLVfh1DQwQKT944Ls0ArCgpUw9Pc3iidlx1/3xOy6N7MONwSXBSX6SilV098QfTkQ0AHRCxg86YUZ8ijnJnF+UguDM7C1NMRXA/ir+FFZUU7rSuQppHDZK8eBNL1a5G4t8W2PftL0tAonEJESB8SW6rLnLHRqY2UWw7PelwZ3kQvUJAg0V1mow3nsekloZWmpaGo5PJFzUXjSD4=
-#         'on':
-#           tags: true
-#           branch: main
-#           repo: mara/mara-pipelines
-#           condition: "$UPLOAD == True"
-#       if: "${{ github.event_name == 'push' && $UPLOAD == True && ${{ github.ref }} }}"
+#       if: "${{ github.event_name == 'push' && ${{ github.ref }} }}"
+    strategy:
+      matrix:
+        python:
+        - '3.8'
+        - '3.8'
