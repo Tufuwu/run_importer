@@ -8,18 +8,25 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install tox-travis
-    - run: tox
+    - run: pip install -r requirements-test.txt
+    - run: python -m unittest discover -s tests
+    - run: coverage run run_tests.py && coverage report -m
+#     # This item has no matching transformer
+#     - email: false
     strategy:
       matrix:
         python:
         - '3.8'
         - '3.8'
+        - '3.8'
+        - '3.8'
+        - 3.8
+        - pypy-3.6
+        - pypy
