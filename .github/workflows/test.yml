@@ -3,107 +3,128 @@ on:
   push:
     branches:
     - "**/*"
+    - "!queues"
   pull_request:
 #   # This item has no matching transformer
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-dj32
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: 3.8
-    - run: pip install --upgrade pip
-    - run: pip install coverage
-    - run: pip install coveralls
-    - run: coverage run -m unittest discover -s lexpy/tests
-    - run: coverage report -i -m
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage codecov coveralls tox
+    - run: "./bin/fake-server &"
+    - run: tox
+#     # This item has no matching transformer
+#     - pypi:
+#         provider: pypi
+#         user: apsl
+#         'on':
+#           tags: true
+#           branch: main
+#           condition: "$TOXENV = py310-dj32"
+#         distributions: sdist bdist_wheel
+#         password:
+#           secure: Y9nEwnPu8O8biF0rH50ysnwwOkuRERTCWqCLO0bIc8GvELrDghF29UQdK9Ycy9OrEaUwj91AqyR+/5176qfj5hKCVoFZ76Yxwg4XRAZuKITQJNtvgBrbd3dK9QRVBuPHhwa9Jo18a28s223rNexfhXIW6BuR97IWcYwij70cMDOcE1+cOS1QUfBA1ixyn+j6cpsUGcBBv2mnV4Oana37BXs0+3CO4TfRIGHPd3.8tK+srGuZPs5gpJLj4OHF/2wB833PK8w7KSwShyGjqCjIWJVMAXRR1DyJL1A7nE8YXn/pXwcHZVgu0hhpTsVC5nCwyVT7Hv0WUKIyOplJdb3gYDlog2stRL88UOjawnkWc+c8YGBeF8KfOISFKwcrmeYTVnIRCEt6BmH1rTP4js4I3wrrOiPjgTe1HD0tqdzZ6+IAcP7Pav4ZSnweyWpqoCc+ZOfKKnPBnqptDnb6BuPNSTYKpelJeCRy3ivsRjO7ZSetnXm4lTJmt/bLNrkchGFs0rfn4rq/mJQF6V9B7FO63Fy6kABue4rd2zmEt9WjUIE1KDfCV1kg7JtoOci5BJXuasa1/JzIoaVWV90ahP9mWTARirCPh4esP1PlBnqBTZN0kZboxn9mosQPDFQ9GwdvpqJrSpMBOXc7frmfiLgMyhutGeN6mU1kZmDD3rQyfWA=
+#       if: "${{ github.event_name == 'push' && $TOXENV == py310-dj32 && ${{ github.ref }} }}"
     - run: coveralls
+      if: "${{ success() }}"
+    - run: codecov
+      if: "${{ success() }}"
   test_2:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-dj32
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: 3.8
-    - run: pip install --upgrade pip
-    - run: pip install coverage
-    - run: pip install coveralls
-    - run: coverage run -m unittest discover -s lexpy/tests
-    - run: coverage report -i -m
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage codecov coveralls tox
+    - run: "./bin/fake-server &"
+    - run: tox
+#     # This item has no matching transformer
+#     - pypi:
+#         provider: pypi
+#         user: apsl
+#         'on':
+#           tags: true
+#           branch: main
+#           condition: "$TOXENV = py310-dj32"
+#         distributions: sdist bdist_wheel
+#         password:
+#           secure: Y9nEwnPu8O8biF0rH50ysnwwOkuRERTCWqCLO0bIc8GvELrDghF29UQdK9Ycy9OrEaUwj91AqyR+/5176qfj5hKCVoFZ76Yxwg4XRAZuKITQJNtvgBrbd3dK9QRVBuPHhwa9Jo18a28s223rNexfhXIW6BuR97IWcYwij70cMDOcE1+cOS1QUfBA1ixyn+j6cpsUGcBBv2mnV4Oana37BXs0+3CO4TfRIGHPd3.8tK+srGuZPs5gpJLj4OHF/2wB833PK8w7KSwShyGjqCjIWJVMAXRR1DyJL1A7nE8YXn/pXwcHZVgu0hhpTsVC5nCwyVT7Hv0WUKIyOplJdb3gYDlog2stRL88UOjawnkWc+c8YGBeF8KfOISFKwcrmeYTVnIRCEt6BmH1rTP4js4I3wrrOiPjgTe1HD0tqdzZ6+IAcP7Pav4ZSnweyWpqoCc+ZOfKKnPBnqptDnb6BuPNSTYKpelJeCRy3ivsRjO7ZSetnXm4lTJmt/bLNrkchGFs0rfn4rq/mJQF6V9B7FO63Fy6kABue4rd2zmEt9WjUIE1KDfCV1kg7JtoOci5BJXuasa1/JzIoaVWV90ahP9mWTARirCPh4esP1PlBnqBTZN0kZboxn9mosQPDFQ9GwdvpqJrSpMBOXc7frmfiLgMyhutGeN6mU1kZmDD3rQyfWA=
+#       if: "${{ github.event_name == 'push' && $TOXENV == py310-dj32 && ${{ github.ref }} }}"
     - run: coveralls
+      if: "${{ success() }}"
+    - run: codecov
+      if: "${{ success() }}"
   test_3:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install --upgrade pip
-    - run: pip install coverage
-    - run: pip install coveralls
-    - run: coverage run -m unittest discover -s lexpy/tests
-    - run: coverage report -i -m
-    - run: coveralls
-  test_4:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py39-dj32
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: 3.9
-    - run: pip install --upgrade pip
-    - run: pip install coverage
-    - run: pip install coveralls
-    - run: coverage run -m unittest discover -s lexpy/tests
-    - run: coverage report -i -m
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage codecov coveralls tox
+    - run: "./bin/fake-server &"
+    - run: tox
+#     # This item has no matching transformer
+#     - pypi:
+#         provider: pypi
+#         user: apsl
+#         'on':
+#           tags: true
+#           branch: main
+#           condition: "$TOXENV = py310-dj32"
+#         distributions: sdist bdist_wheel
+#         password:
+#           secure: Y9nEwnPu8O8biF0rH50ysnwwOkuRERTCWqCLO0bIc8GvELrDghF29UQdK9Ycy9OrEaUwj91AqyR+/5176qfj5hKCVoFZ76Yxwg4XRAZuKITQJNtvgBrbd3dK9QRVBuPHhwa9Jo18a28s223rNexfhXIW6BuR97IWcYwij70cMDOcE1+cOS1QUfBA1ixyn+j6cpsUGcBBv2mnV4Oana37BXs0+3CO4TfRIGHPd3.8tK+srGuZPs5gpJLj4OHF/2wB833PK8w7KSwShyGjqCjIWJVMAXRR1DyJL1A7nE8YXn/pXwcHZVgu0hhpTsVC5nCwyVT7Hv0WUKIyOplJdb3gYDlog2stRL88UOjawnkWc+c8YGBeF8KfOISFKwcrmeYTVnIRCEt6BmH1rTP4js4I3wrrOiPjgTe1HD0tqdzZ6+IAcP7Pav4ZSnweyWpqoCc+ZOfKKnPBnqptDnb6BuPNSTYKpelJeCRy3ivsRjO7ZSetnXm4lTJmt/bLNrkchGFs0rfn4rq/mJQF6V9B7FO63Fy6kABue4rd2zmEt9WjUIE1KDfCV1kg7JtoOci5BJXuasa1/JzIoaVWV90ahP9mWTARirCPh4esP1PlBnqBTZN0kZboxn9mosQPDFQ9GwdvpqJrSpMBOXc7frmfiLgMyhutGeN6mU1kZmDD3rQyfWA=
+#       if: "${{ github.event_name == 'push' && $TOXENV == py310-dj32 && ${{ github.ref }} }}"
     - run: coveralls
-  test_5:
-    runs-on: ubuntu-latest
+      if: "${{ success() }}"
+    - run: codecov
+      if: "${{ success() }}"
+  test_4:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py310-dj32
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: pypy-3.6
-    - run: pip install --upgrade pip
-    - run: pip install coverage
-    - run: pip install coveralls
-    - run: coverage run -m unittest discover -s lexpy/tests
-    - run: coverage report -i -m
+        python-version: 3.1
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage codecov coveralls tox
+    - run: "./bin/fake-server &"
+    - run: tox
+#     # This item has no matching transformer
+#     - pypi:
+#         provider: pypi
+#         user: apsl
+#         'on':
+#           tags: true
+#           branch: main
+#           condition: "$TOXENV = py310-dj32"
+#         distributions: sdist bdist_wheel
+#         password:
+#           secure: Y9nEwnPu8O8biF0rH50ysnwwOkuRERTCWqCLO0bIc8GvELrDghF29UQdK9Ycy9OrEaUwj91AqyR+/5176qfj5hKCVoFZ76Yxwg4XRAZuKITQJNtvgBrbd3dK9QRVBuPHhwa9Jo18a28s223rNexfhXIW6BuR97IWcYwij70cMDOcE1+cOS1QUfBA1ixyn+j6cpsUGcBBv2mnV4Oana37BXs0+3CO4TfRIGHPd3.8tK+srGuZPs5gpJLj4OHF/2wB833PK8w7KSwShyGjqCjIWJVMAXRR1DyJL1A7nE8YXn/pXwcHZVgu0hhpTsVC5nCwyVT7Hv0WUKIyOplJdb3gYDlog2stRL88UOjawnkWc+c8YGBeF8KfOISFKwcrmeYTVnIRCEt6BmH1rTP4js4I3wrrOiPjgTe1HD0tqdzZ6+IAcP7Pav4ZSnweyWpqoCc+ZOfKKnPBnqptDnb6BuPNSTYKpelJeCRy3ivsRjO7ZSetnXm4lTJmt/bLNrkchGFs0rfn4rq/mJQF6V9B7FO63Fy6kABue4rd2zmEt9WjUIE1KDfCV1kg7JtoOci5BJXuasa1/JzIoaVWV90ahP9mWTARirCPh4esP1PlBnqBTZN0kZboxn9mosQPDFQ9GwdvpqJrSpMBOXc7frmfiLgMyhutGeN6mU1kZmDD3rQyfWA=
+#       if: "${{ github.event_name == 'push' && $TOXENV == py310-dj32 && ${{ github.ref }} }}"
     - run: coveralls
-  test_6:
-    runs-on: windows-latest
-    env:
-      PATH: "/c/Python38:/c/Python38/Scripts:$PATH"
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - run: choco install python --version 3.8.0
-    - run: python -m pip install --upgrade pip
-    - run: pip install --upgrade pip
-    - run: pip install coverage
-    - run: pip install coveralls
-    - run: coverage run -m unittest discover -s lexpy/tests
-    - run: coverage report -i -m
-    - run: coveralls
-  test_7:
-    runs-on: windows-latest
-    env:
-      PATH: "/c/Python39:/c/Python39/Scripts:$PATH"
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - run: choco install python --version 3.9.0
-    - run: python -m pip install --upgrade pip
-    - run: pip install --upgrade pip
-    - run: pip install coverage
-    - run: pip install coveralls
-    - run: coverage run -m unittest discover -s lexpy/tests
-    - run: coverage report -i -m
-    - run: coveralls
+      if: "${{ success() }}"
+    - run: codecov
+      if: "${{ success() }}"
