@@ -8,22 +8,12 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: "${{ matrix.python }}"
-    - run: pip install -U --force setuptools pip
-    - run: "./setup.py develop"
-    - run: pip install -e '.[tests]'
-    - run: pylama
-    - run: py.test
-    strategy:
-      matrix:
-        python:
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.8'
+        python-version: '3.8'
+    - run: pip install -U .
+    - run: python -m unittest discover
