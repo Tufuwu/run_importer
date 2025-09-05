@@ -3,178 +3,185 @@ on:
   push:
     branches:
     - "**/*"
+    - main
   pull_request:
 #   # This item has no matching transformer
 #   maximum_number_of_builds: 0
 jobs:
   test:
     runs-on: ubuntu-22.04
-    env:
-      TOX_ENV: "'flake8'"
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install coverage isort tox
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER; fi
-    - run: tox -e $TOX_ENV
-    - run: bash <(curl -s https://codecov.io/bash)
+        python-version: "${{ matrix.python }}"
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install codecov
+    - run: pip install -U pip wheel setuptools
+    - run: pip install $PACKAGES -e .[tests]
+    - run: coverage run --rcfile=.coveragerc runtests.py
+    - run: codecov
       if: "${{ success() }}"
+    - uses: rectalogic/notify-irc@v1
+      if: "${{ github.event_name != 'pull_request' }}"
+      with:
+        server: irc.freenode.org
+        port: 6697
+        channel: django-fluent
+        nickname: Default nickname
+        message: "%{repository}#%{build_number} (%{commit}) %{message}  --  %{build_url}"
+#     # This item has no matching transformer
+#     - email:
+#         recipients:
+#         - travis@edoburu.nl
+#         on_success: never
+#         on_failure: always
+    - uses: rtCamp/action-slack-notify@v2.2.1
+      if: "${{ failure() }}"
+      env:
+        SLACK_WEBHOOK: "${{ secrets.SLACK_WEBHOOK }}"
+    strategy:
+      matrix:
+        PACKAGES:
+        - django>=1.11,<1.12
+        - django>=2.0,<2.1
+        python:
+        - '3.8'
+        - '3.8'
+        - '3.8'
+        exclude:
+        - PACKAGES: django>=2.0,<2.1
+          python: '3.8'
+#       # 'allow_failures' transformations are currently unsupported.
+    env:
+      PACKAGES: "${{ matrix.PACKAGES }}"
   test_2:
     runs-on: ubuntu-22.04
     env:
-      TOX_ENV: "'isort'"
+      PACKAGES: django>=2.1,<2.2
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install coverage isort tox
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER; fi
-    - run: tox -e $TOX_ENV
-    - run: bash <(curl -s https://codecov.io/bash)
+        python-version: '3.8'
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install codecov
+    - run: pip install -U pip wheel setuptools
+    - run: pip install $PACKAGES -e .[tests]
+    - run: coverage run --rcfile=.coveragerc runtests.py
+    - run: codecov
       if: "${{ success() }}"
+    - uses: rectalogic/notify-irc@v1
+      if: "${{ github.event_name != 'pull_request' }}"
+      with:
+        server: irc.freenode.org
+        port: 6697
+        channel: django-fluent
+        nickname: Default nickname
+        message: "%{repository}#%{build_number} (%{commit}) %{message}  --  %{build_url}"
+#     # This item has no matching transformer
+#     - email:
+#         recipients:
+#         - travis@edoburu.nl
+#         on_success: never
+#         on_failure: always
+    - uses: rtCamp/action-slack-notify@v2.2.1
+      if: "${{ failure() }}"
+      env:
+        SLACK_WEBHOOK: "${{ secrets.SLACK_WEBHOOK }}"
   test_3:
     runs-on: ubuntu-22.04
     env:
-      DJANGO: "'dj22'"
+      PACKAGES: django>=2.2,<2.3
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install coverage isort tox
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER; fi
-    - run: tox -e $TOX_ENV
-    - run: bash <(curl -s https://codecov.io/bash)
+        python-version: '3.8'
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install codecov
+    - run: pip install -U pip wheel setuptools
+    - run: pip install $PACKAGES -e .[tests]
+    - run: coverage run --rcfile=.coveragerc runtests.py
+    - run: codecov
       if: "${{ success() }}"
+    - uses: rectalogic/notify-irc@v1
+      if: "${{ github.event_name != 'pull_request' }}"
+      with:
+        server: irc.freenode.org
+        port: 6697
+        channel: django-fluent
+        nickname: Default nickname
+        message: "%{repository}#%{build_number} (%{commit}) %{message}  --  %{build_url}"
+#     # This item has no matching transformer
+#     - email:
+#         recipients:
+#         - travis@edoburu.nl
+#         on_success: never
+#         on_failure: always
+    - uses: rtCamp/action-slack-notify@v2.2.1
+      if: "${{ failure() }}"
+      env:
+        SLACK_WEBHOOK: "${{ secrets.SLACK_WEBHOOK }}"
   test_4:
     runs-on: ubuntu-22.04
     env:
-      DJANGO: "'dj22'"
+      PACKAGES: django>=3.0,<3.1
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install coverage isort tox
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER; fi
-    - run: tox -e $TOX_ENV
-    - run: bash <(curl -s https://codecov.io/bash)
+        python-version: '3.8'
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install codecov
+    - run: pip install -U pip wheel setuptools
+    - run: pip install $PACKAGES -e .[tests]
+    - run: coverage run --rcfile=.coveragerc runtests.py
+    - run: codecov
       if: "${{ success() }}"
-  test_5:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: "'dj22'"
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
+    - uses: rectalogic/notify-irc@v1
+      if: "${{ github.event_name != 'pull_request' }}"
       with:
-        python-version: 3.8
-    - run: pip install coverage isort tox
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER; fi
-    - run: tox -e $TOX_ENV
-    - run: bash <(curl -s https://codecov.io/bash)
-      if: "${{ success() }}"
-  test_6:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: "'dj22'"
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install coverage isort tox
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER; fi
-    - run: tox -e $TOX_ENV
-    - run: bash <(curl -s https://codecov.io/bash)
-      if: "${{ success() }}"
-  test_7:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: "'dj30'"
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install coverage isort tox
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER; fi
-    - run: tox -e $TOX_ENV
-    - run: bash <(curl -s https://codecov.io/bash)
-      if: "${{ success() }}"
-  test_8:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: "'dj31'"
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install coverage isort tox
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER; fi
-    - run: tox -e $TOX_ENV
-    - run: bash <(curl -s https://codecov.io/bash)
-      if: "${{ success() }}"
-  test_9:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: "'dj32'"
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install coverage isort tox
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi
-    - run: if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER; fi
-    - run: tox -e $TOX_ENV
-    - run: bash <(curl -s https://codecov.io/bash)
-      if: "${{ success() }}"
+        server: irc.freenode.org
+        port: 6697
+        channel: django-fluent
+        nickname: Default nickname
+        message: "%{repository}#%{build_number} (%{commit}) %{message}  --  %{build_url}"
+#     # This item has no matching transformer
+#     - email:
+#         recipients:
+#         - travis@edoburu.nl
+#         on_success: never
+#         on_failure: always
+    - uses: rtCamp/action-slack-notify@v2.2.1
+      if: "${{ failure() }}"
+      env:
+        SLACK_WEBHOOK: "${{ secrets.SLACK_WEBHOOK }}"
