@@ -3,28 +3,20 @@ on:
   push:
     branches:
     - "**/*"
+    - main
   pull_request:
 #   # This item has no matching transformer
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: "${{ matrix.python }}"
-    - run: pip install pyflakes pytest pytest-doctestplus
-    - run: set -e
-    - run: pyflakes .
-    - run: python -We:invalid -We::SyntaxWarning -m compileall -f -q removestar/
-    - run: pytest
-    - run: python setup.py install
-    strategy:
-      matrix:
-        python:
-        - 3.8
-        - 3.8
-        - 3.8
-        - 3.8
+        python-version: '3.8'
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install sphinx${SPHINX_VERSION:+==$SPHINX_VERSION}
+    - run: pip install -r requirements-travis.txt
+    - run: inspekt checkall --disable-style E501,E265,W601,W605,E402,E722,E741 --no-license-check
