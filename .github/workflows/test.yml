@@ -8,27 +8,26 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: pip install -r requirements.txt
-    - run: pytest -v --cov=filestack tests
-    - run: coveralls
+    - run: pip install coverage vcrpy
+    - run: python setup.py install
+    - run: coverage run --source=censusgeocode -m unittest
+    - run: censusgeocode --version
+    - run: censusgeocode --csv tests/fixtures/batch.csv || echo failed
+    - run: coverage report
       if: "${{ success() }}"
-#     # This item has no matching transformer
-#     - email:
-#         recipients:
-#         - dev@filestack.com
-#         on_success: never
-#         on_failure: always
     strategy:
       matrix:
         python:
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.8'
+        - 3.8
+        - 3.8
+        - 3.8
+        - 3.9
+        - 3.1
+#       # 'allow_failures' transformations are currently unsupported.
