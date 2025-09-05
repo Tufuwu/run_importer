@@ -12,9 +12,146 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - run: python setup.py --quiet install
+    - run: python test_docformatter.py
+    - run: docformatter setup.py
+    - run: pip install --quiet coverage
+      if: "${{ success() }}"
+    - run: make coverage
+      if: "${{ success() }}"
+    - run: pip install --quiet coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+    strategy:
+      matrix:
+        LANG:
+        - ''
+    env:
+      LANG: "${{ matrix.LANG }}"
+  test_2:
+    runs-on: ubuntu-latest
+    env:
+      LANG: "${{ secrets.LANG }}"
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: '3.8'
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install -r requirements.txt
-    - run: python validate.py
+    - run: python setup.py --quiet install
+    - run: python test_docformatter.py
+    - run: docformatter setup.py
+    - run: pip install --quiet coverage
+      if: "${{ success() }}"
+    - run: make coverage
+      if: "${{ success() }}"
+    - run: pip install --quiet coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_3:
+    runs-on: ubuntu-latest
+    env:
+      LANG: "${{ secrets.LANG }}"
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: pypy
+    - run: python setup.py --quiet install
+    - run: python test_docformatter.py
+    - run: docformatter setup.py
+    - run: pip install --quiet coverage
+      if: "${{ success() }}"
+    - run: make coverage
+      if: "${{ success() }}"
+    - run: pip install --quiet coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_4:
+    runs-on: ubuntu-latest
+    env:
+      LANG: "${{ secrets.LANG }}"
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.8'
+    - run: python setup.py --quiet install
+    - run: python test_docformatter.py
+    - run: docformatter setup.py
+    - run: pip install --quiet coverage
+      if: "${{ success() }}"
+    - run: make coverage
+      if: "${{ success() }}"
+    - run: pip install --quiet coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_5:
+    runs-on: ubuntu-latest
+    env:
+      LANG: "${{ secrets.LANG }}"
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.8'
+    - run: python setup.py --quiet install
+    - run: python test_docformatter.py
+    - run: docformatter setup.py
+    - run: pip install --quiet coverage
+      if: "${{ success() }}"
+    - run: make coverage
+      if: "${{ success() }}"
+    - run: pip install --quiet coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_6:
+    runs-on: ubuntu-latest
+    env:
+      LANG: "${{ secrets.LANG }}"
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.8'
+    - run: python setup.py --quiet install
+    - run: python test_docformatter.py
+    - run: docformatter setup.py
+    - run: pip install --quiet coverage
+      if: "${{ success() }}"
+    - run: make coverage
+      if: "${{ success() }}"
+    - run: pip install --quiet coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_7:
+    runs-on: ubuntu-22.04
+    env:
+      LANG: "${{ secrets.LANG }}"
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.8'
+    - run: python setup.py --quiet install
+    - run: python test_docformatter.py
+    - run: docformatter setup.py
+    - run: pip install --quiet coverage
+      if: "${{ success() }}"
+    - run: make coverage
+      if: "${{ success() }}"
+    - run: pip install --quiet coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
