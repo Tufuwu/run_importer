@@ -14,36 +14,15 @@ jobs:
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: '3.8'
-    - run: pip install -r requirements.txt
-    - run: python run_demo_md.py
-  test_2:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: pip install -r requirements.txt
-    - run: python run_demo_md.py
-  test_3:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: pip install -r requirements.txt
-    - run: python run_demo_md.py
-  test_4:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: pip install -r requirements.txt
-    - run: python run_demo_md.py
+        python-version: "${{ matrix.python }}"
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install tox
+    - run: TOXENV=$(tox --listenvs | grep "py${TRAVIS_PYTHON_VERSION/./}-" | tr '\n' ',')
+    - run: export TOXENV
+    - run: tox
+    strategy:
+      matrix:
+        python:
+        - '3.8'
+        - '3.8'
+        - '3.8'
