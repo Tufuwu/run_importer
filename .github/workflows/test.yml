@@ -9,53 +9,56 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      NUMPY_VERSION: 1.15.4
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: 3.8
-    - run: pip install numpy==$NUMPY_VERSION scipy matplotlib>=3 cython>=0.28
-    - run: dev/build.sh
-    - run: dev/test.sh
+    - run: pip install -U setuptools>=39.2.0
+    - run: python setup.py develop
+    - run: python setup.py test
   test_2:
     runs-on: ubuntu-latest
-    env:
-      NUMPY_VERSION: 1.15.4
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: 3.8
-    - run: pip install numpy==$NUMPY_VERSION scipy matplotlib>=3 cython>=0.28
-    - run: dev/build.sh
-    - run: dev/test.sh
+    - run: pip install -U setuptools>=39.2.0
+    - run: python setup.py develop
+    - run: python setup.py test
   test_3:
     runs-on: ubuntu-latest
-    env:
-      NUMPY_VERSION: 1.15.4
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: 3.8
-    - run: pip install numpy==$NUMPY_VERSION scipy matplotlib>=3 cython>=0.28
-    - run: dev/build.sh
-    - run: dev/test.sh
+    - run: pip install -U setuptools>=39.2.0
+    - run: python setup.py develop
+    - run: python setup.py test
   test_4:
     runs-on: ubuntu-latest
-    env:
-      NUMPY_VERSION: 1.19.4
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: 3.9
-    - run: pip install numpy==$NUMPY_VERSION scipy matplotlib>=3 cython>=0.28
-    - run: dev/build.sh
-    - run: dev/test.sh
+    - run: pip install -U setuptools>=39.2.0
+    - run: python setup.py develop
+    - run: python setup.py test
+  test_5:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: pypy-3.6
+    - run: pip install -U setuptools>=39.2.0
+    - run: python setup.py develop
+    - run: python setup.py test
