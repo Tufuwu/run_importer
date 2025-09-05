@@ -8,27 +8,25 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install -r docs/requirements.txt
-    - run: pip install pytest
-    - run: pip install -e .
-    - run: pytest
+    - run: python setup.py develop
+    - run: python -m pytest
+    - uses: rtCamp/action-slack-notify@v2.2.1
+      env:
+        SLACK_WEBHOOK: "${{ secrets.SLACK_WEBHOOK }}"
+        SLACK_CHANNEL: greynir:38FfPr1S8oZRNFMmt47mzT3z
     strategy:
       matrix:
         python:
         - '3.8'
         - '3.8'
         - '3.8'
+        - '3.8'
+        - '3.8'
+        - pypy-3.6.8
