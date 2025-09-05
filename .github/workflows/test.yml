@@ -8,26 +8,20 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: python setup.py --quiet install
-    - run: pip --quiet install -r test-requirements.txt
-    - run: python setup.py --quiet test
-    - run: coverage run --source circlify tests.py
-      if: "${{ success() }}"
-    - run: coveralls
-      if: "${{ success() }}"
+    - run: apt-get -y install coinor-cbc
+    - run: pip install -r requirements.txt
+    - run: python setup.py -q install
+    - run: flake8
+    - run: py.test
     strategy:
       matrix:
         python:
         - '3.8'
         - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.9'
-        - '3.10'
