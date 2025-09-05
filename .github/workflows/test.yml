@@ -15,29 +15,14 @@ jobs:
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: sudo apt-get -qq update
-    - run: sudo apt-get install -y graphviz python-tk python-matplotlib
-    - run: travis_retry pip install Sphinx
-    - run: travis_retry pip install recommonmark
-    - run: travis_retry pip install pep8
-    - run: travis_retry pip install coverage
-    - run: travis_retry pip install coveralls
-    - run: travis_retry pip install numpy
-    - run: python -Wall setup.py try
-    - run: python setup.py install
-    - run: python -Wall setup.py test
-    - run: COVERAGE=1 coverage run test/runtest.py
-    - run: python run.py --doctest
-    - run: python run.py --html
-    - run: pep8 --exclude=asizeof.py,metadata.py,bottle*.py --max-line-length=80 pympler
-    - run: coveralls
-      if: "${{ success() }}"
+    - run: pip install tox-travis
+    - run: tox
+#     # This item has no matching transformer
+#     - email: false
     strategy:
       matrix:
         python:
         - '3.8'
         - '3.8'
         - '3.8'
-        - '3.8'
-        - '3.8'
-        - 3.8
+        - '3.9'
