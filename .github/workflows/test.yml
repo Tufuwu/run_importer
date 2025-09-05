@@ -8,24 +8,29 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
+#     # 'Transformers::TravisCI::Scripts::Dependencies' dependencies are currently unsupported
     - name: Set up pip cache
       uses: actions/cache@v3.3.2
       with:
         path: "~/.cache/pip"
         key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
         restore-keys: "${{ runner.os }}-pip-"
-    - run: pip install -U tox-travis
-    - run: tox
+    - run: pip install codecov
+    - run: pip install tox
+    - run: tox -e $TOXENV
+    - run: tox -e coverage-report
+      if: "${{ success() }}"
+    - run: codecov
+      if: "${{ success() }}"
     strategy:
       matrix:
-        python:
-        - '3.8'
-        - '3.8'
-        - '3.8'
+        exclude:
+        - arch: ppc64le
+          python: pypy-3.6
