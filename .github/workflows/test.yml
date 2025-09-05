@@ -14,63 +14,16 @@ jobs:
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: "${{ matrix.python }}"
+        python-version: '3.8'
 #     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install tox-travis
-    - run: pip install coveralls
-    - run: tox
-    - run: if [ -e .coverage ]; then coveralls; fi
-      if: "${{ success() }}"
-    strategy:
-      matrix:
-        python:
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.8'
-  test_2:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: flake8
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install tox-travis
-    - run: pip install coveralls
-    - run: tox
-    - run: if [ -e .coverage ]; then coveralls; fi
-      if: "${{ success() }}"
-  test_3:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: isort
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install tox-travis
-    - run: pip install coveralls
-    - run: tox
-    - run: if [ -e .coverage ]; then coveralls; fi
-      if: "${{ success() }}"
-  test_4:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install tox-travis
-    - run: pip install coveralls
-    - run: tox
-    - run: if [ -e .coverage ]; then coveralls; fi
+    - run: pip install -r requirements.txt
+    - run: wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ${{ github.workspace }}/miniconda.sh
+    - run: bash ${{ github.workspace }}/miniconda.sh -b -u -p ${{ github.workspace }}/miniconda
+    - run: export PATH="${{ github.workspace }}/minicoonda/bin:$PATH"
+    - run: hash -r
+    - run: pip install nose coverage coveralls flake8 scikit-image
+    - run: pip install -e .
+    - run: flake8
+    - run: nosetests -sv --with-doctest --no-byte-compile --with-coverage --cover-package=tftb
+    - run: coveralls
       if: "${{ success() }}"
