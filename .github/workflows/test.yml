@@ -9,145 +9,21 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      TOXENV: py38
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install --upgrade setuptools pip tox
-    - run: tox -v
-  test_2:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: py38
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install --upgrade setuptools pip tox
-    - run: tox -v
-  test_3:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: py38
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install --upgrade setuptools pip tox
-    - run: tox -v
-  test_4:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: py38
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install --upgrade setuptools pip tox
-    - run: tox -v
-  test_5:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: py38
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install --upgrade setuptools pip tox
-    - run: tox -v
-  test_6:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: py38
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install --upgrade setuptools pip tox
-    - run: tox -v
-  test_7:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: py39
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.9
-    - run: pip install --upgrade setuptools pip tox
-    - run: tox -v
-  test_8:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: qa,doc
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install --upgrade setuptools pip tox
-    - run: tox -v
+        python-version: "${{ matrix.python }}"
+    - run: pip install -r requirements.txt
+    - run: pip install pytest pytest-cov
+    - run: pip install coverage
+    - run: pytest --cov=./
+    - run: bash <(curl -s https://codecov.io/bash)
+      if: "${{ success() }}"
+    strategy:
+      matrix:
+        python:
+        - '3.8'
+        - '3.9'
+        - '3.10'
