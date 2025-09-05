@@ -8,146 +8,122 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
-      TOXENV: py38
+      TOX_ENV: py38
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
+    - run: rm -rf ${{ github.workspace }}/.cache/pip/log
+    - name: Set up cache
       uses: actions/cache@v3.3.2
       with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
+        path: "${{ github.workspace }}/.cache/pip"
+        key: "${{ runner.os }}-path"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox
+        python-version: 3.8.12
+    - run: pip install -U -r requirements-dev.txt
+    - run: pip install .
+    - run: tox -e $TOX_ENV
+    - run: pytest --dead-fixtures
   test_2:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
-      TOXENV: py38
+      TOX_ENV: py38
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
+    - run: rm -rf ${{ github.workspace }}/.cache/pip/log
+    - name: Set up cache
       uses: actions/cache@v3.3.2
       with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
+        path: "${{ github.workspace }}/.cache/pip"
+        key: "${{ runner.os }}-path"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox
+        python-version: 3.8.9
+    - run: pip install -U -r requirements-dev.txt
+    - run: pip install .
+    - run: tox -e $TOX_ENV
+    - run: pytest --dead-fixtures
   test_3:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
-      TOXENV: py38
+      TOX_ENV: py38
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
+    - run: rm -rf ${{ github.workspace }}/.cache/pip/log
+    - name: Set up cache
       uses: actions/cache@v3.3.2
       with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
+        path: "${{ github.workspace }}/.cache/pip"
+        key: "${{ runner.os }}-path"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox
+        python-version: 3.8.6
+    - run: pip install -U -r requirements-dev.txt
+    - run: pip install .
+    - run: tox -e $TOX_ENV
+    - run: pytest --dead-fixtures
   test_4:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
-      TOXENV: py38
+      TOX_ENV: py39
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
+    - run: rm -rf ${{ github.workspace }}/.cache/pip/log
+    - name: Set up cache
       uses: actions/cache@v3.3.2
       with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
+        path: "${{ github.workspace }}/.cache/pip"
+        key: "${{ runner.os }}-path"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox
+        python-version: 3.9.1
+    - run: pip install -U -r requirements-dev.txt
+    - run: pip install .
+    - run: tox -e $TOX_ENV
+    - run: pytest --dead-fixtures
   test_5:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
-      TOXENV: py38
+      TOX_ENV: pypy-3.6
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
+    - run: rm -rf ${{ github.workspace }}/.cache/pip/log
+    - name: Set up cache
       uses: actions/cache@v3.3.2
       with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
+        path: "${{ github.workspace }}/.cache/pip"
+        key: "${{ runner.os }}-path"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox
+        python-version: pypy-3.6
+    - run: pip install -U -r requirements-dev.txt
+    - run: pip install .
+    - run: tox -e $TOX_ENV
+    - run: pytest --dead-fixtures
   test_6:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
-      TOXENV: flake8
+      TOX_ENV: lint
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
+    - run: rm -rf ${{ github.workspace }}/.cache/pip/log
+    - name: Set up cache
       uses: actions/cache@v3.3.2
       with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
+        path: "${{ github.workspace }}/.cache/pip"
+        key: "${{ runner.os }}-path"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox
-  test_7:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: isort
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox
-  test_8:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: black
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox
+        python-version: 3.9.1
+    - run: pip install -U -r requirements-dev.txt
+    - run: pip install .
+    - run: tox -e $TOX_ENV
+    - run: pytest --dead-fixtures
