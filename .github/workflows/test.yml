@@ -15,11 +15,14 @@ jobs:
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: apt-get -y install coinor-cbc
-    - run: pip install -r requirements.txt
-    - run: python setup.py -q install
-    - run: flake8
-    - run: py.test
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - run: CFLAGS="-O0" pip install . --upgrade
+    - run: "./runtests.sh"
     strategy:
       matrix:
         python:
