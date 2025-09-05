@@ -15,12 +15,17 @@ jobs:
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: npm install -g jshint
     - run: pip install -r requirements.txt
-    - run: make
+    - run: pip install -r requirements-dev.txt
+    - run: pip install -e .
+    - run: flake8
+    - run: pytest --cov
+    - run: coveralls
+      if: "${{ success() }}"
     strategy:
       matrix:
         python:
+        - 3.8
         - 3.8
         - 3.8
         - 3.8
