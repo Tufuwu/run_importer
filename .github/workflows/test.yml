@@ -8,23 +8,24 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: # this agent type is not supported: [[{"dist"=>"trusty"}]]
-             ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then travis_retry pip install -r py2_requirements.txt; fi
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then travis_retry pip install -r py3_requirements.txt; fi
-    - run: make test
+    - run: pip install tox-travis coveralls
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
     strategy:
       matrix:
         python:
-        - 3.8.6
         - '3.8'
         - '3.8'
         - '3.8'
         - '3.8'
+        - 3.8
+        - 3.8
+#       # 'allow_failures' transformations are currently unsupported.
