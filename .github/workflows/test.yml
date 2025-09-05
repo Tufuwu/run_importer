@@ -3,7 +3,6 @@ on:
   push:
     branches:
     - "**/*"
-    - main
   pull_request:
 #   # This item has no matching transformer
 #   maximum_number_of_builds: 0
@@ -16,60 +15,19 @@ jobs:
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: pip install tox-travis
-    - run: pip install codecov
-    - run: tox
-    - run: codecov
+    - run: pip install -r dev-requirements.txt
+    - run: make clean
+    - run: make pep8
+    - run: make flake8
+    - run: make check
+    - run: make unittest
+    - run: coveralls
       if: "${{ success() }}"
+#     # This item has no matching transformer
+#     - email:
+#       - eosplus-dev@arista.com
     strategy:
       matrix:
         python:
         - '3.8'
-        - '3.8'
-        - '3.8'
         - '3.9'
-  test_2:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: lint
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install tox-travis
-    - run: pip install codecov
-    - run: tox
-    - run: codecov
-      if: "${{ success() }}"
-  test_3:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: docs
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install tox-travis
-    - run: pip install codecov
-    - run: tox
-    - run: codecov
-      if: "${{ success() }}"
-  test_4:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: isort
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install tox-travis
-    - run: pip install codecov
-    - run: tox
-    - run: codecov
-      if: "${{ success() }}"
