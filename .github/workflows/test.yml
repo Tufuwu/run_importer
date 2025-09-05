@@ -8,69 +8,27 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: py38
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: '3.8'
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install -U tox coveralls
-    - run: travis_wait 30 tox
-  test_2:
-    runs-on: ubuntu-latest
-    env:
-      TOXENV: cov
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install -U tox coveralls
-    - run: travis_wait 30 tox
+        python-version: "${{ matrix.python }}"
+    - run: pip install -r requirements.txt
+    - run: pytest -v --cov=filestack tests
     - run: coveralls
       if: "${{ success() }}"
-  test_3:
-    runs-on: ubuntu-22.04
-    env:
-      TOXENV: py38
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install -U tox coveralls
-    - run: travis_wait 30 tox
-  test_4:
-    runs-on: ubuntu-22.04
-    env:
-      TOXENV: py38
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install -U tox coveralls
-    - run: travis_wait 30 tox
-  test_5:
-    runs-on: ubuntu-22.04
-    env:
-      TOXENV: py39
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.9'
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install -U tox coveralls
-    - run: travis_wait 30 tox
+#     # This item has no matching transformer
+#     - email:
+#         recipients:
+#         - dev@filestack.com
+#         on_success: never
+#         on_failure: always
+    strategy:
+      matrix:
+        python:
+        - '3.8'
+        - '3.8'
+        - '3.8'
+        - '3.8'
