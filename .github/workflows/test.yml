@@ -8,11 +8,23 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - run: scripts/link-format-chk.sh
-    - run: scripts/buildtable.pl >/tmp/table.mediawiki || exit 1
-    - run: diff README.mediawiki /tmp/table.mediawiki | grep '^[<>] |' >/tmp/after.diff || true
-    - run: if git checkout HEAD^ && scripts/buildtable.pl >/tmp/table.mediawiki 2>/dev/null; then diff README.mediawiki /tmp/table.mediawiki | grep '^[<>] |' >/tmp/before.diff || true; newdiff=$(diff -s /tmp/before.diff /tmp/after.diff -u | grep '^+'); if [ -n "$newdiff" ]; then echo "$newdiff"; exit 1; fi; else echo 'Cannot build previous commit table for comparison'; fi
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: "${{ matrix.python }}"
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install -r dev-requirements.txt
+    - run: flake8 sendgrid_backend/
+    - run: isort -c ./
+    - run: black --check ./
+    - run: mypy sendgrid_backend/
+    - run: tox
+    strategy:
+      matrix:
+        python:
+        - 3.8
+        - 3.8
+        - 3.8
