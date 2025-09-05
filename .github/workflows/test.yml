@@ -8,23 +8,25 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: python3 setup.py install
-    - run: sudo apt-get -y update
-    - run: pip install pytest-cov
-    - run: pip install .[ja]
-    - run: python3 -m pytest
-    - run: "./test.sh"
+    - run: pip install flake8
+    - run: python -m pytest -v .
+    - run: flake8
     strategy:
       matrix:
         python:
         - '3.8'
         - '3.8'
         - '3.8'
+        - '3.8'
+        - '3.8'
+        - '3.8'
+        - '3.9'
+        - pypy
+        - pypy-3.6
