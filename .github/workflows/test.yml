@@ -21,14 +21,17 @@ jobs:
         path: "${{ github.workspace }}/.cache/pip"
         key: "${{ runner.os }}-path"
 #     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install -U pip wheel coverage codecov
-    - run: pip install -r requirements.txt pytest pytest-mock
-    - run: python setup.py develop
-    - run: coverage run -m py.test -v tests/ && codecov
+    - run: pip install -r requirements/tests.txt
+    - run: pip install coveralls
+    - run: nosetests --with-coverage --cover-erase --cover-package=temba_client
+    - run: flake8
+    - run: coveralls
+      if: "${{ success() }}"
+    - uses: rtCamp/action-slack-notify@v2.2.1
+      env:
+        SLACK_WEBHOOK: "${{ secrets.SLACK_WEBHOOK }}"
     strategy:
       matrix:
         python:
         - '3.8'
         - '3.8'
-        - '3.8'
-        - '3.9'
