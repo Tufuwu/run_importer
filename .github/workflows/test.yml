@@ -15,30 +15,11 @@ jobs:
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install -U django==$DJANGO_VERSION
-    - run: if [ "$TRAVIS_PYTHON_VERSION" = "3.8" ]; then pip install black; fi
-    - run: python manage.py test
-    - run: if [ "$TRAVIS_PYTHON_VERSION" = "3.8" ]; then black --check zen_queries; fi
+    - run: pip install tox-travis
+    - run: tox
     strategy:
       matrix:
-        DJANGO_VERSION:
-        - '1.8'
-        - '1.11'
-        - '2.0'
-        - '2.1'
-        - '2.2'
         python:
         - '3.8'
         - '3.8'
         - '3.8'
-        - '3.8'
-        exclude:
-        - DJANGO_VERSION: '2.0'
-          python: '3.8'
-        - DJANGO_VERSION: '2.1'
-          python: '3.8'
-        - DJANGO_VERSION: '2.2'
-          python: '3.8'
-    env:
-      DJANGO_VERSION: "${{ matrix.DJANGO_VERSION }}"
