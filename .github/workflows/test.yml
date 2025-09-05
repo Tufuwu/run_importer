@@ -8,27 +8,19 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - run: pip install --upgrade black
-    - run: pip install --upgrade flake8
-    - run: pip install --upgrade -r requirements.txt
-    - run: flake8 --statistics --count
-    - run: black --check --diff --target-version py38 .
-    - run: python random_street_view.py --help
+    - run: pip install -U nose -r requirements.txt
+    - run: python setup.py install
+    - run: make tests
     strategy:
       matrix:
         python:
-        - '3.8'
-        - '3.8'
+        - 3.8.17
+        - 3.8
+        - 3.8
