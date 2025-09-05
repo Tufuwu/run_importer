@@ -8,21 +8,483 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+    strategy:
+      matrix: {}
+#       # 'allow_failures' transformations are currently unsupported.
+  test_2:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: pre-commit
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: '3.9'
-    - run: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    - run: sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    - run: sudo apt-get update
-    - run: sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
-    - run: docker build -t draft-kings-fun .
-    - run: pip install -r requirements.txt
-    - run: docker run draft-kings-fun flake8 draftfast
-    - run: docker run draft-kings-fun nosetests --with-coverage --cover-package=.
-    services:
-#       # This item has no matching transformer
-#       docker:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_3:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-2.2
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_4:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-2.2
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_5:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-2.2
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_6:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-2.2
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_7:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: pypy-3.6-2.2
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: pypy-3.6
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_8:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-3.0
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_9:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-3.0
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_10:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-3.0
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_11:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: pypy-3.6-3.0
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: pypy-3.6
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_12:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-3.1
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_13:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-3.1
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_14:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-3.1
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_15:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: pypy-3.6-3.1
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: pypy-3.6
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_16:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-3.2
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_17:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-3.2
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_18:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-3.2
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_19:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py39-3.2
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.9
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_20:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: pypy-3.6-3.2
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: pypy-3.6
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_21:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38-main
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_22:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py39-main
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.9
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_23:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: pypy-3.6-main
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: pypy-3.6
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install coverage tox
+    - run: tox
+    - run: coveralls
+      if: "${{ success() }}"
