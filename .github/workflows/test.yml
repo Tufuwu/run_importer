@@ -9,145 +9,86 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    if: ${{ github.ref || github.event_name == 'pull_request' || github.ref == 'refs/heads/main' && github.event_name == push) }}
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox -e py
+        python-version: "${{ matrix.python }}"
+    - run: apt-get -y install graphviz
+    - run: pip install -U pip setuptools
+    - run: python setup.py sdist
+    - run: pip install dist/pydot-*.tar.gz
+    - run: pip install -r requirements.txt
+    - run: cd test/
+    - run: python pydot_unittest.py
+    strategy:
+      matrix:
+        python:
+        - 3.8
+        - 3.9
   test_2:
-    runs-on: ubuntu-latest
+    runs-on: # this agent type is not supported: [[{"arch"=>"amd64"}]]
+             ubuntu-latest
+    if: ${{ github.ref || github.event_name == 'pull_request' || github.ref == 'refs/heads/main' && github.event_name == push) }}
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: 3.8
-    - run: pip install tox
-    - run: tox -e py
+    - run: apt-get -y install graphviz
+    - run: pip install -U pip setuptools
+    - run: python setup.py sdist
+    - run: pip install dist/pydot-*.tar.gz
+    - run: pip install -r requirements.txt
+    - run: cd test/
+    - run: python pydot_unittest.py
   test_3:
-    runs-on: ubuntu-latest
+    runs-on: # this agent type is not supported: [[{"arch"=>"ppc64le"}]]
+             ubuntu-latest
+    if: ${{ github.ref || github.event_name == 'pull_request' || github.ref == 'refs/heads/main' && github.event_name == push) }}
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: 3.8
-    - run: pip install tox
-    - run: tox -e py
+    - run: apt-get -y install graphviz
+    - run: pip install -U pip setuptools
+    - run: python setup.py sdist
+    - run: pip install dist/pydot-*.tar.gz
+    - run: pip install -r requirements.txt
+    - run: cd test/
+    - run: python pydot_unittest.py
   test_4:
-    runs-on: ubuntu-latest
+    runs-on: # this agent type is not supported: [[{"arch"=>"ppc64le"}]]
+             ubuntu-latest
+    if: ${{ github.ref || github.event_name == 'pull_request' || github.ref == 'refs/heads/main' && github.event_name == push) }}
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
+    - uses: actions/setup-python@v5.0.0
       with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
+        python-version: 3.9
+    - run: apt-get -y install graphviz
+    - run: pip install -U pip setuptools
+    - run: python setup.py sdist
+    - run: pip install dist/pydot-*.tar.gz
+    - run: pip install -r requirements.txt
+    - run: cd test/
+    - run: python pydot_unittest.py
+  black:
+    runs-on: # this agent type is not supported: [[{"arch"=>"amd64"}]]
+             ubuntu-latest
+    if: ${{ github.ref || github.event_name == 'pull_request' || github.ref == 'refs/heads/main' && github.event_name == push) }}
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: 3.8
-    - run: pip install tox
-    - run: tox -e py
-  test_5:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: pypy-3.8
-    - run: pip install tox
-    - run: tox -e py
-  test_6:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: pypy-3.6
-    - run: pip install tox
-    - run: tox -e py
-  test_7:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox -e py
-  test_8:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox -e py
-  test_9:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install tox
-    - run: tox -e py
+    - run: apt-get -y install
+    - run: pip install -e .[dev]
+    - run: black --check --diff .
