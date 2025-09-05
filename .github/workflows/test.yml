@@ -8,194 +8,30 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: 3.8
-    - run: pip install coverage
-    - run: coverage run --source=olefile -m nose tests
-    - run: coverage report
-    - run: pip install pycodestyle pyflakes
-    - run: pyflakes .
-    - run: pycodestyle --statistics --count .
-    - run: pip install coveralls
+        python-version: "${{ matrix.python }}"
+    - run: pip install tox-travis codecov
+    - run: tox
+    - run: |-
+        VERSION="python_${TRAVIS_PYTHON_VERSION//[^[:alnum:]]/}" &&
+        codecov --required --flags $VERSION ||
+        (sleep 5 && codecov --required --flags $VERSION) ||
+        (sleep 10 && codecov --required --flags $VERSION) ||
+        (sleep 20 && codecov --required --flags $VERSION) ||
+        (sleep 30 && codecov --required --flags $VERSION)
       if: "${{ success() }}"
-    - run: coveralls
-      if: "${{ success() }}"
-  test_2:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install coverage
-    - run: coverage run --source=olefile -m nose tests
-    - run: coverage report
-    - run: pip install pycodestyle pyflakes
-    - run: pyflakes .
-    - run: pycodestyle --statistics --count .
-    - run: pip install coveralls
-      if: "${{ success() }}"
-    - run: coveralls
-      if: "${{ success() }}"
-  test_3:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install coverage
-    - run: coverage run --source=olefile -m nose tests
-    - run: coverage report
-    - run: pip install pycodestyle pyflakes
-    - run: pyflakes .
-    - run: pycodestyle --statistics --count .
-    - run: pip install coveralls
-      if: "${{ success() }}"
-    - run: coveralls
-      if: "${{ success() }}"
-  test_4:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install coverage
-    - run: coverage run --source=olefile -m nose tests
-    - run: coverage report
-    - run: pip install pycodestyle pyflakes
-    - run: pyflakes .
-    - run: pycodestyle --statistics --count .
-    - run: pip install coveralls
-      if: "${{ success() }}"
-    - run: coveralls
-      if: "${{ success() }}"
-  test_5:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install coverage
-    - run: coverage run --source=olefile -m nose tests
-    - run: coverage report
-    - run: pip install pycodestyle pyflakes
-    - run: pyflakes .
-    - run: pycodestyle --statistics --count .
-    - run: pip install coveralls
-      if: "${{ success() }}"
-    - run: coveralls
-      if: "${{ success() }}"
-  test_6:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install coverage
-    - run: coverage run --source=olefile -m nose tests
-    - run: coverage report
-    - run: pip install pycodestyle pyflakes
-    - run: pyflakes .
-    - run: pycodestyle --statistics --count .
-    - run: pip install coveralls
-      if: "${{ success() }}"
-    - run: coveralls
-      if: "${{ success() }}"
-  test_7:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: pypy
-    - run: pip install coverage
-    - run: coverage run --source=olefile -m nose tests
-    - run: coverage report
-    - run: pip install pycodestyle pyflakes
-    - run: pyflakes .
-    - run: pycodestyle --statistics --count .
-    - run: pip install coveralls
-      if: "${{ success() }}"
-    - run: coveralls
-      if: "${{ success() }}"
-  test_8:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: pypy-3.6
-    - run: pip install coverage
-    - run: coverage run --source=olefile -m nose tests
-    - run: coverage report
-    - run: pip install pycodestyle pyflakes
-    - run: pyflakes .
-    - run: pycodestyle --statistics --count .
-    - run: pip install coveralls
-      if: "${{ success() }}"
-    - run: coveralls
-      if: "${{ success() }}"
+    strategy:
+      matrix:
+        python:
+        - 3.8.2
+        - '3.8'
+        - '3.8'
+        - '3.8'
+        - '3.8'
+        - '3.9'
+        - pypy-3.6.8
