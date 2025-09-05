@@ -15,18 +15,11 @@ jobs:
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: pip install .
-    - run: pip install -r requirements.txt
-    - run: pip install rednose coverage coveralls
-    - run: nosetests test --rednose --verbosity=3 --with-coverage --cover-package ncclient
-    - run: coveralls
-      if: "${{ success() }}"
+    - run: pip install . -r requirements.txt
+    - run: pytest
     strategy:
       matrix:
         python:
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.9'
+        - 3.9
+        - 3.8
+        - 3.8
