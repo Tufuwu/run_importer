@@ -8,25 +8,70 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: "${{ matrix.python }}"
-    - run: pip install -q Django==$DJANGO_VERSION
-    - run: pip install -e .[flake8,tests]
-    - run: flake8
-    - run: pytest
-    strategy:
-      matrix:
-        DJANGO_VERSION:
-        - '1.11'
-        python:
-        - 3.8
-        - 3.8
-        - 3.8
-        - 3.8
-    env:
-      DJANGO_VERSION: "${{ matrix.DJANGO_VERSION }}"
+        python-version: '3.8'
+    - run: pip install -r mock/requirements.txt
+    - run: pip install pytest-cov
+    - run: PYTHON=python${TRAVIS_PYTHON_VERSION%%-dev} ./mock/run-tests.sh
+  test_2:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.8'
+    - run: pip install -r mock/requirements.txt
+    - run: pip install pytest-cov
+    - run: PYTHON=python${TRAVIS_PYTHON_VERSION%%-dev} ./mock/run-tests.sh
+  test_3:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.9'
+    - run: pip install -r mock/requirements.txt
+    - run: pip install pytest-cov
+    - run: PYTHON=python${TRAVIS_PYTHON_VERSION%%-dev} ./mock/run-tests.sh
+  test_4:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+    - run: pip install -r mock/requirements.txt
+    - run: pip install pytest-cov
+    - run: PYTHON=python${TRAVIS_PYTHON_VERSION%%-dev} ./mock/run-tests.sh
+  mock_RPM_in_Copr:
+    runs-on: ubuntu-22.04
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.9'
+    - run: pip install -r mock/requirements.txt
+    - run: pip install pytest-cov
+    - run: PACKAGE=mock .travis/copr-build
+  mock_core_configs_RPM_in_Copr:
+    runs-on: ubuntu-22.04
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.9'
+    - run: pip install -r mock/requirements.txt
+    - run: pip install pytest-cov
+    - run: PACKAGE=mock-core-configs .travis/copr-build
