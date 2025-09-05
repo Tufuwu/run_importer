@@ -3,7 +3,6 @@ on:
   push:
     branches:
     - "**/*"
-    - main
   pull_request:
 #   # This item has no matching transformer
 #   maximum_number_of_builds: 0
@@ -14,24 +13,20 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4.1.0
       with:
-        fetch-depth: 10
+        fetch-depth: false
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-#     # This item has no matching transformer
-#     - apt: true
-#     # 'compiler' dependencies are currently unsupported
-    - run: apt-get -y install git build-essential automake libtool python-dev gettext swig
-#     # 'compiler' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: pip install flake8
-    - run: flake8 --version
-    - run: echo compiling AutoBouquetsMaker enigma2 plugin
-    - run: python -m compileall .
-    - run: find . -type f -name "*.po" -exec msgfmt {} -o {}.mo \;
-    - run: flake8 --ignore=W191,E128,E501,E722 . --exit-zero
-    - run: echo done.
+    - run: pip install tox-travis
+    - run: tox
+    - uses: rtCamp/action-slack-notify@v2.2.1
+      env:
+        SLACK_WEBHOOK: "${{ secrets.SLACK_WEBHOOK }}"
     strategy:
       matrix:
         python:
         - '3.8'
         - '3.8'
+        - '3.9'
+        - '3.10'
+        - '3.11'
