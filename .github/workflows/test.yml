@@ -8,26 +8,23 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: pip install -r dev-requirements.txt
-    - run: make clean
-    - run: make pep8
-    - run: make flake8
-    - run: make check
-    - run: make unittest
-    - run: coveralls
-      if: "${{ success() }}"
-#     # This item has no matching transformer
-#     - email:
-#       - eosplus-dev@arista.com
+    - run: pip install pyflakes pytest pytest-doctestplus
+    - run: set -e
+    - run: pyflakes .
+    - run: python -We:invalid -We::SyntaxWarning -m compileall -f -q removestar/
+    - run: pytest
+    - run: python setup.py install
     strategy:
       matrix:
         python:
-        - '3.8'
-        - '3.9'
+        - 3.8
+        - 3.8
+        - 3.8
+        - 3.8
