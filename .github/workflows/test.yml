@@ -12,8 +12,15 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - run: sudo apt-get update
-    - run: sudo apt install python3-pip
-    - run: sudo pip3 install -r requirements.txt
-    - run: sudo pip3 install tox
-    - run: tox
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: "${{ matrix.python }}"
+    - run: pip install django bs4
+    - run: env PYTHONPATH=`pwd` python setup.py test
+    strategy:
+      matrix:
+        python:
+        - 3.8
+        - 3.8
+        - 3.8
+        - 3.8
