@@ -6,37 +6,44 @@ on:
   pull_request:
 #   # This item has no matching transformer
 #   maximum_number_of_builds: 0
-env:
-  PIP_CACHE_DIR: "${{ github.workspace }}/.cache/pip"
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+      with:
+        fetch-depth: 0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: rm -f ${{ github.workspace }}/.cache/pip/log/debug.log
-    - name: Set up pip cache
-      uses: actions/cache@v3.3.2
-      with:
-        path: "~/.cache/pip"
-        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
-        restore-keys: "${{ runner.os }}-pip-"
     - name: Set up cache
       uses: actions/cache@v3.3.2
       with:
-        path: "${{ github.workspace }}/.cache/pip"
+        path: "${{ github.workspace }}/.sonar/cache"
         key: "${{ runner.os }}-path"
-    - run: pip install -r requirements.txt
-    - run: make test
+    - run: bash scripts/install.sh
+    - run: bash scripts/run_tests.sh
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@v2.1.0
+      env:
+        SONAR_TOKEN: "${{ secrets.SONAR_TOKEN }}"
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        SONARCLOUD_URL: "${{ secrets.SONAR_URL }}"
+      with:
+        args: |-
+          #WARNING: projectKey is a required field, ensure it is configured here or in your project file
+          -Dsonar.projectKey='<<INSERT KEY HERE>>'/`
+          -Dsonar.organization='jonlabelle-github'/`
+          -Dsonar.host.url='${{ secrets.SONAR_URL }}'/`
+          -Dsonar.login=${{ env.SONAR_TOKEN }}/`
+          if [ "${{ github.event.number }}" = "false" ]; then ; fi
 #     # This item has no matching transformer
-#     - email: false
+#     - email:
+#         on_success: never
+#         on_failure: always
     strategy:
       matrix:
         python:
         - '3.8'
         - '3.8'
-        - '3.8'
-        - 3.8
