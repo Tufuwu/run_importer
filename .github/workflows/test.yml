@@ -15,18 +15,16 @@ jobs:
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: python setup.py develop
-    - run: python -m pytest
-    - uses: rtCamp/action-slack-notify@v2.2.1
-      env:
-        SLACK_WEBHOOK: "${{ secrets.SLACK_WEBHOOK }}"
-        SLACK_CHANNEL: greynir:38FfPr1S8oZRNFMmt47mzT3z
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: python3 setup.py install
+    - run: sudo apt-get -y update
+    - run: pip install pytest-cov
+    - run: pip install .[ja]
+    - run: python3 -m pytest
+    - run: "./test.sh"
     strategy:
       matrix:
         python:
         - '3.8'
         - '3.8'
         - '3.8'
-        - '3.8'
-        - '3.8'
-        - pypy-3.6.8
