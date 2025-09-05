@@ -3,8 +3,6 @@ on:
   push:
     branches:
     - "**/*"
-    - main
-    - dev
   pull_request:
 #   # This item has no matching transformer
 #   maximum_number_of_builds: 0
@@ -14,36 +12,7 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: "${{ matrix.python }}"
-    - run: pip install -r requirements.txt
-    - run: pip install coveralls
-    - run: python setup.py install
-    - run: coverage run --include './epydemic/*' -m nose test/test_${TEST_SUITE}.py
-    - run: coveralls
-      if: "${{ success() }}"
-    strategy:
-      matrix:
-        TEST_SUITE:
-        - adddelete
-        - compartmentedmodel
-        - networkdynamics
-        - sir
-        - sirs
-        - sir_fixedrecovery
-        - sis
-        - sis_fixedrecovery
-        - seir
-        - stochasticrates
-        - monitor
-        - generators
-        - loci
-        - percolate
-        python:
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - pypy-3.6
-    env:
-      TEST_SUITE: "${{ matrix.TEST_SUITE }}"
+    - run: scripts/link-format-chk.sh
+    - run: scripts/buildtable.pl >/tmp/table.mediawiki || exit 1
+    - run: diff README.mediawiki /tmp/table.mediawiki | grep '^[<>] |' >/tmp/after.diff || true
+    - run: if git checkout HEAD^ && scripts/buildtable.pl >/tmp/table.mediawiki 2>/dev/null; then diff README.mediawiki /tmp/table.mediawiki | grep '^[<>] |' >/tmp/before.diff || true; newdiff=$(diff -s /tmp/before.diff /tmp/after.diff -u | grep '^+'); if [ -n "$newdiff" ]; then echo "$newdiff"; exit 1; fi; else echo 'Cannot build previous commit table for comparison'; fi
