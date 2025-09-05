@@ -8,74 +8,26 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - run: pip install pipenv
-    - run: pipenv install --dev
-    - run: pipenv run lint
-    - run: pipenv run test
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: "${{ matrix.python }}"
+    - run: pip install codecov
+    - run: pip install -r requirements.txt
+    - run: pip install -r test-requirements.txt
+    - run: flake8 stockstats.py test.py
+    - run: py.test --cov=./ test.py
+    - run: codecov
+      if: "${{ success() }}"
+#     # This item has no matching transformer
+#     - email:
+#       - jealous@163.com
     strategy:
-      matrix: {}
-#       # 'allow_failures' transformations are currently unsupported.
-  test_2:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: pip install pipenv
-    - run: pipenv install --dev
-    - run: pipenv run lint
-    - run: pipenv run test
-  test_3:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: pip install pipenv
-    - run: pipenv install --dev
-    - run: pipenv run lint
-    - run: pipenv run test
-  test_4:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: pip install pipenv
-    - run: pipenv install --dev
-    - run: pipenv run lint
-    - run: pipenv run test
-  test_5:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.9'
-    - run: pip install pipenv
-    - run: pipenv install --dev
-    - run: pipenv run lint
-    - run: pipenv run test
-  test_6:
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: 3.8
-    - run: pip install pipenv
-    - run: pipenv install --dev
-    - run: pipenv run lint
-    - run: pipenv run test
+      matrix:
+        python:
+        - '3.8'
+        - '3.8'
+        - '3.9'
