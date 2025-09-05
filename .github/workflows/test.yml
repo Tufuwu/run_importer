@@ -12,438 +12,403 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: "${{ matrix.python }}"
+    - run: ". ${{ github.workspace }}/.nvm/nvm.sh"
+    - run: nvm install 12
+    - run: nvm use 12
+    - run: npm install -g mjml-http-server@0.0.3
+    - run: npm install mjml@$MJML_VERSION
+    - run: node_modules/.bin/mjml --version
+    - run: pip install "Django$DJANGO_VERSION"
+    - run: pip install "requests>=2.20.0,<=2.24.0"
+    - run: python tools.py test
     strategy:
-      matrix: {}
-#       # 'allow_failures' transformations are currently unsupported.
-  test_2:
-    runs-on: ubuntu-22.04
+      matrix:
+        python:
+        - '3.8'
+        - '3.8'
+        - '3.8'
+        - '3.8'
+        - '3.8'
+        include:
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 3.3.8
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.3.1
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.4.0
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.5.1
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.6.3
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 3.3.8
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.3.1
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.4.0
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.5.1
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.6.3
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 3.3.8
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.3.1
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.4.0
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.5.1
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.6.3
+        - DJANGO_VERSION: "<1.12"
+          MJML_VERSION: 3.3.8
+        - DJANGO_VERSION: "<1.12"
+          MJML_VERSION: 4.3.1
+        - DJANGO_VERSION: "<1.12"
+          MJML_VERSION: 4.4.0
+        - DJANGO_VERSION: "<1.12"
+          MJML_VERSION: 4.5.1
+        - DJANGO_VERSION: "<1.12"
+          MJML_VERSION: 4.6.3
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 3.3.8
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.3.1
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.4.0
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.5.1
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.6.3
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 3.3.8
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.3.1
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.4.0
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.5.1
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.6.3
+        - DJANGO_VERSION: "<2.3"
+          MJML_VERSION: 3.3.8
+        - DJANGO_VERSION: "<2.3"
+          MJML_VERSION: 4.3.1
+        - DJANGO_VERSION: "<2.3"
+          MJML_VERSION: 4.4.0
+        - DJANGO_VERSION: "<2.3"
+          MJML_VERSION: 4.5.1
+        - DJANGO_VERSION: "<2.3"
+          MJML_VERSION: 4.6.3
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 3.3.8
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.3.1
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.4.0
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.5.1
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.6.3
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 3.3.8
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.3.1
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.4.0
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.5.1
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.6.3
+        exclude:
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<2.3"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<2.3"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<2.3"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<2.3"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<2.3"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<3.1"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<3.2"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.9"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.10"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.11"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<1.12"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<1.12"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.12"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<1.12"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<1.12"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<2.1"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 3.3.8
+          python: '3.8'
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.3.1
+          python: '3.8'
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.4.0
+          python: '3.8'
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.5.1
+          python: '3.8'
+        - DJANGO_VERSION: "<2.2"
+          MJML_VERSION: 4.6.3
+          python: '3.8'
     env:
-      DJANGO: '1.11'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_3:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '1.11'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_4:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '1.11'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_5:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '1.11'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_6:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '2.0'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_7:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '2.0'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_8:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '2.0'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_9:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '2.1'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_10:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '2.1'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_11:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '2.1'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_12:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '2.2'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_13:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '2.2'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_14:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '2.2'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_15:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '2.2'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_16:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.0'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_17:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.0'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_18:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.0'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_19:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.0'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.9'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_20:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.1'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_21:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.1'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_22:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.1'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_23:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.1'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.9'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_24:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.2'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_25:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.2'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_26:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.2'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_27:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.2'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.9'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_28:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '3.2'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.10'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_29:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '4.0'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_30:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '4.0'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.9'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_31:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: '4.0'
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.10'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_32:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: main
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.8'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_33:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: main
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.9'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
-  test_34:
-    runs-on: ubuntu-22.04
-    env:
-      DJANGO: main
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4.1.0
-    - uses: actions/setup-python@v5.0.0
-      with:
-        python-version: '3.10'
-    - run: if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install -U importlib_metadata; fi
-    - run: pip install tox tox-venv tox-travis
-    - run: tox
+      DJANGO_VERSION: "${{ matrix.DJANGO_VERSION }}"
+      MJML_VERSION: "${{ matrix.MJML_VERSION }}"
