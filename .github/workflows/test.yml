@@ -7,80 +7,223 @@ on:
 #   # This item has no matching transformer
 #   maximum_number_of_builds: 0
 jobs:
-  Python_3.8:
+  test:
     runs-on: ubuntu-latest
+    env:
+      TOXENV: black
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: '3.8'
-    - run: pip install -r requirements.txt
-    - run: pytest
-    - run: mypy pyteal
-    - run: python3 -c "import pyteal" scripts/generate_init.py --check
-    - run: black --check .
-  Python_3.8:
+    - run: pip install tox
+    - run: tox
+    - run: pip install coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_2:
     runs-on: ubuntu-latest
+    env:
+      TOXENV: flake8
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: '3.8'
-    - run: pip install -r requirements.txt
-    - run: pytest
-    - run: mypy pyteal
-    - run: python3 -c "import pyteal" scripts/generate_init.py --check
-    - run: black --check .
-  Python_3_8:
+    - run: pip install tox
+    - run: tox
+    - run: pip install coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_3:
     runs-on: ubuntu-latest
+    env:
+      TOXENV: mypy
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: '3.8'
-    - run: pip install -r requirements.txt
-    - run: pytest
-    - run: mypy pyteal
-    - run: python3 -c "import pyteal" scripts/generate_init.py --check
-    - run: black --check .
-  Python_3_9:
+    - run: pip install tox
+    - run: tox
+    - run: pip install coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_4:
     runs-on: ubuntu-latest
+    env:
+      TOXENV: isort
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: '3.9'
-    - run: pip install -r requirements.txt
-    - run: pytest
-    - run: mypy pyteal
-    - run: python3 -c "import pyteal" scripts/generate_init.py --check
-    - run: black --check .
-  PyPi_release:
-    needs:
-    - Python_3.8
-    - Python_3.8
-    - Python_3_8
-    - Python_3_9
+        python-version: '3.8'
+    - run: pip install tox
+    - run: tox
+    - run: pip install coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_5:
     runs-on: ubuntu-latest
-    if: ${{ github.ref && github.event_name == 'push' }}
+    env:
+      TOXENV: py38
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: '3.9'
-    - run: pip install -r requirements.txt
-    - run: skip
-#     # This item has no matching transformer
-#     - pypi:
-#         provider: pypi
-#         username: __token__
-#         'on':
-#           tags: true
-#           branch: main
-#         distributions: sdist bdist_wheel
-#       if: "${{ github.event_name == 'push' && ${{ github.ref }} }}"
+        python-version: '3.8'
+    - run: pip install tox
+    - run: tox
+    - run: pip install coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_6:
+    runs-on: ubuntu-latest
+    env:
+      TOXENV: py38
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.8'
+    - run: pip install tox
+    - run: tox
+    - run: pip install coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_7:
+    runs-on: ubuntu-latest
+    env:
+      TOXENV: py38
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.8'
+    - run: pip install tox
+    - run: tox
+    - run: pip install coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_8:
+    runs-on: ubuntu-latest
+    env:
+      TOXENV: py38
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.8
+    - run: pip install tox
+    - run: tox
+    - run: pip install coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_9:
+    runs-on: ubuntu-latest
+    env:
+      TOXENV: py39
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.9
+    - run: pip install tox
+    - run: tox
+    - run: pip install coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
+  test_10:
+    runs-on: ubuntu-latest
+    env:
+      TOXENV: pypy-3.6
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - name: Set up pip cache
+      uses: actions/cache@v3.3.2
+      with:
+        path: "~/.cache/pip"
+        key: "${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+        restore-keys: "${{ runner.os }}-pip-"
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: pypy-3.6
+    - run: pip install tox
+    - run: tox
+    - run: pip install coveralls
+      if: "${{ success() }}"
+    - run: coveralls
+      if: "${{ success() }}"
