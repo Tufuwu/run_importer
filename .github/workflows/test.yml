@@ -8,22 +8,20 @@ on:
 #   maximum_number_of_builds: 0
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: "${{ matrix.python }}"
-    - run: pip install -r .github/requirements.txt
-    - run: make test PYTHON=python
-    strategy:
-      matrix:
-        python:
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.8'
-        - '3.9'
+        python-version: 3.8
+    - run: pip3 install doc8 sphinx
+    - run: pip3 install git+https://github.com/osrf/sphinx-tabs
+    - run: pip3 install sphinx_multiversion
+    - run: make html 2> stderr.log
+    - run: cat stderr.log
+    - run: doc8 --ignore D001 --ignore-path build --ignore-path source/Tutorials/Actions
+    - run: doc8 --ignore D000 --ignore D001 --ignore-path build source/Tutorials/Actions
+    - run: if [ -s "stderr.log" ]; then false; fi
+#     # This item has no matching transformer
+#     - email: false
