@@ -3,30 +3,74 @@ on:
   push:
     branches:
     - "**/*"
-    - main
   pull_request:
 #   # This item has no matching transformer
 #   maximum_number_of_builds: 0
 jobs:
-  Flake8:
-    runs-on: ubuntu-22.04
+  test:
+    runs-on: ubuntu-latest
+    env:
+      TOXENV: py38
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: '3.8'
-    - run: pip install flake8
-    - run: flake8
-  Dockerfile_lint:
-    runs-on: ubuntu-22.04
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install -U tox coveralls
+    - run: travis_wait 30 tox
+  test_2:
+    runs-on: ubuntu-latest
+    env:
+      TOXENV: cov
     steps:
     - name: checkout
       uses: actions/checkout@v4.1.0
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: '3.8'
-    - run: docker run -i hadolint/hadolint:v1.19.0-45-gef91156-alpine < Dockerfile
-    services:
-#       # This item has no matching transformer
-#       docker:
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install -U tox coveralls
+    - run: travis_wait 30 tox
+    - run: coveralls
+      if: "${{ success() }}"
+  test_3:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.8'
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install -U tox coveralls
+    - run: travis_wait 30 tox
+  test_4:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py38
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.8'
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install -U tox coveralls
+    - run: travis_wait 30 tox
+  test_5:
+    runs-on: ubuntu-22.04
+    env:
+      TOXENV: py39
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-python@v5.0.0
+      with:
+        python-version: '3.9'
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: pip install -U tox coveralls
+    - run: travis_wait 30 tox
