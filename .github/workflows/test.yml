@@ -15,24 +15,19 @@ jobs:
     - uses: actions/setup-python@v5.0.0
       with:
         python-version: "${{ matrix.python }}"
-    - run: pip install -r $REQUIREMENTS
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
     - run: pip install --upgrade pytest
-    - run: pip install pytest-cov codecov
-    - run: export MPLBACKEND=Agg
-    - run: python -m pytest --cov=fgivenx
-    - run: codecov
-      if: "${{ success() }}"
-    - run: bash <(curl -s https://codecov.io/bash)
-      if: "${{ success() }}"
+    - run: pip install --editable .
+    - run: pytest
+#     # This item has no matching transformer
+#     - email: false
     strategy:
       matrix:
-        REQUIREMENTS:
-        - minimal_requirements.txt
-        - requirements.txt
         python:
         - '3.8'
         - '3.8'
         - '3.8'
         - '3.8'
-    env:
-      REQUIREMENTS: "${{ matrix.REQUIREMENTS }}"
+        - '3.9'
+        - 3.8
+#       # 'allow_failures' transformations are currently unsupported.
